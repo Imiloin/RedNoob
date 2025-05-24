@@ -1,0 +1,2 @@
+huggingface-cli download THUIR/Qilin --repo-type dataset --local-dir ./Qilin
+huggingface-cli download Qwen/Qwen3-0.6B-Base --local-dir ./Qwen3-0.6B-Base

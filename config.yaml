@@ -1,0 +1,60 @@
+dataset_path: "./Qilin"
+dataset_subset: "notes" # Name of the dataset configuration if applicable
+dataset_split: "train" # Split to use for training
+# dataset_split: "train[10%:11%]"    # Split to use for training
+base_model_path: "./Qwen3-0.6B-Base"
+output_dir: "./qwen3_wlaes_finetuned"
+trained_lora_path: "./qwen3_wlaes_finetuned" # Typically same as output_dir after training
+
+# WLAES Weights
+wlaes_weights:
+  like: 1.0
+  collect: 0.5
+  comment: 2.0
+
+# Text Preprocessing
+max_length: 768 # Max sequence length for tokenizer
+
+# LoRA Configuration
+lora:
+  r: 16
+  lora_alpha: 32
+  # IMPORTANT: Verify these target_modules for Qwen3-0.6B-Base.
+  # These are common for Llama-like models, but Qwen might differ.
+  # Check model.named_modules() or Qwen's documentation.
+  target_modules:
+    [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj",
+    ]
+  lora_dropout: 0.05
+  bias: "none" # or "all" or "lora_only"
+
+# Training Arguments
+training:
+  num_train_epochs: 2
+  per_device_train_batch_size: 8 # Adjust based on your GPU VRAM
+  per_device_eval_batch_size: 16
+  gradient_accumulation_steps: 2
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  lr_scheduler_type: "linear" # "cosine" or "linear"
+  warmup_ratio: 0.03 # Proportion of training steps for warmup
+  logging_steps: 50
+  eval_steps: 5000 # Evaluate every N steps
+  save_steps: 5000 # Save model every N steps
+  save_total_limit: 2 # Keep only the best and the last checkpoint
+  fp16: True # Use mixed precision training if GPU supports it
+  seed: 42
+  report_to: "tensorboard" # or "wandb", "none"
+  # Optional: Gradient clipping
+  # max_grad_norm: 1.0
+
+# Evaluation
+evaluation:
+  per_device_eval_batch_size: 16
