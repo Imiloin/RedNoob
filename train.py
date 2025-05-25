@@ -116,6 +116,7 @@ def main():
     tokenized_dataset = dataset_with_labels.map(
         preprocess_data,
         batched=True,
+        num_proc=4,
         fn_kwargs={"tokenizer": tokenizer, "max_length": config["max_length"]},
         remove_columns=[
             name
@@ -133,7 +134,7 @@ def main():
     ):  # A bit of a hacky check, better to have explicit splits
         print("Splitting dataset into train and validation sets.")
         train_test_split = tokenized_dataset.train_test_split(
-            test_size=0.1, seed=config["training"]["seed"]
+            test_size=0.01, seed=config["training"]["seed"]
         )
         train_dataset = train_test_split["train"]
         eval_dataset = train_test_split["test"]
@@ -171,6 +172,8 @@ def main():
     # --- 9. Training Arguments ---
     train_cfg = config["training"]
     training_args = TrainingArguments(
+        dataloader_num_workers=train_cfg["dataloader_num_workers"],
+        dataloader_pin_memory=True,
         output_dir=config["output_dir"],
         num_train_epochs=train_cfg["num_train_epochs"],
         per_device_train_batch_size=train_cfg["per_device_train_batch_size"],
