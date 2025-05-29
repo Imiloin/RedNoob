@@ -69,11 +69,10 @@ def main():
     # This ensures the validation set is identical.
     # The `train_test_split` method from `datasets` is used.
     print("Splitting dataset into train and validation sets for baseline...")
-    split_seed = config["training"].get("seed", 42)  # Use the same seed
     # Assuming test_size was 0.1 for eval_dataset in train.py
     # If you used a different split ratio, adjust test_size here.
     train_test_split = dataset_with_wlaes.train_test_split(
-        test_size=0.1, seed=split_seed
+        test_size=0.01, seed=config["training"]["seed"]
     )
 
     train_baseline_dataset = train_test_split["train"]
