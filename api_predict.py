@@ -1,7 +1,7 @@
 import os
 import json
 import time
-from openai import OpenAI
+import openai
 
 
 def get_api_response(
@@ -11,10 +11,11 @@ def get_api_response(
     model="openai/gpt-4.1-nano",
     temperature=0.2,
     top_p=1.0,
+    max_retries=3,
     **kwargs,
 ):
     """
-    Get response from OpenAI API.
+    Get response from OpenAI API with rate limit handling.
     Args:
         endpoint (str): API endpoint URL.
         api_key (str): API key for authentication.
@@ -22,21 +23,45 @@ def get_api_response(
         model (str): Model name to use.
         temperature (float): Sampling temperature.
         top_p (float): Nucleus sampling parameter.
+        max_retries (int): Maximum number of retries for rate limit errors.
         **kwargs: Additional parameters for the API request.
     Returns:
         str: The response text from the API.
     """
     if api_key is None:
         api_key = "xxxxxx"
-    client = OpenAI(
+    client = openai.OpenAI(
         base_url=endpoint,
         api_key=api_key,
     )
-    response = client.chat.completions.create(
-        model=model, messages=messages, temperature=temperature, top_p=top_p, **kwargs
-    )
-
-    return response.choices[0].message.content
+    
+    for attempt in range(max_retries):
+        try:
+            response = client.chat.completions.create(
+                model=model, messages=messages, temperature=temperature, top_p=top_p, **kwargs
+            )
+            return response.choices[0].message.content
+        except openai.RateLimitError as e:
+            print(f"Rate limit error: {e}")
+            if attempt < max_retries - 1:
+                # Extract wait time from error message if available
+                error_msg = str(e)
+                if "wait" in error_msg.lower():
+                    # Try to extract the wait time from the error message
+                    import re
+                    wait_match = re.search(r'wait (\d+) seconds', error_msg)
+                    if wait_match:
+                        wait_time = int(wait_match.group(1)) + 5  # Add 5 seconds buffer
+                    else:
+                        wait_time = 65  # Default to 65 seconds if can't parse
+                else:
+                    wait_time = 65  # Default wait time
+                
+                print(f"Waiting {wait_time} seconds before retry (attempt {attempt + 1}/{max_retries})...")
+                time.sleep(wait_time)
+            else:
+                print("Max retries reached for rate limit. Raising error.")
+                raise
 
 
 def construct_prompt(
@@ -172,9 +197,9 @@ def main(
 if __name__ == "__main__":
 
     # Set your API endpoint, model, and token here
-    endpoint = "https://models.github.ai/inference"
-    model = "openai/gpt-4.1-nano"
-    token = os.environ["GITHUB_TOKEN"]  # Ensure you set this environment variable
+    endpoint = "https://api.deepinfra.com/v1/openai"
+    model = "deepseek-ai/DeepSeek-V3-0324"
+    token = os.environ["DEEPINFRA_TOKEN"]  # Ensure you set this environment variable
 
     main(
         jsonl_file="results/predictions.jsonl",
