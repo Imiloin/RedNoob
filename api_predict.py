@@ -6,9 +6,9 @@ from openai import OpenAI
 
 def get_api_response(
     endpoint,
-    messages,
-    model="openai/gpt-4.1-nano",
     api_key=None,
+    messages=[{"role": "user", "content": "Hello!"}],
+    model="openai/gpt-4.1-nano",
     temperature=0.2,
     top_p=1.0,
     **kwargs,
@@ -16,7 +16,7 @@ def get_api_response(
     """
     Get response from OpenAI API.
     Args:
-
+        endpoint (str): API endpoint URL.
         api_key (str): API key for authentication.
         messages (list): List of messages to send to the model.
         model (str): Model name to use.
@@ -93,12 +93,22 @@ def construct_messages(
 
 def main(
     jsonl_file="results/predictions.jsonl",
+    backup_file=None,
     endpoint="https://models.github.ai/inference",
     model="openai/gpt-4.1-nano",
     token=None,
     max_retries=3,
-    sleep_time=3,
+    sleep_time=3, 
 ):
+    # Copy the original file to a backup if specified
+    if backup_file is not None:
+        if os.path.exists(backup_file):
+            print(f"Backup file {backup_file} already exists. Overwrite it.")
+        with open(jsonl_file, "r", encoding="utf-8") as original, open(
+            backup_file, "w", encoding="utf-8"
+        ) as backup:
+            for line in original:
+                backup.write(line)
 
     # Create an empty list to store results
     result = []
@@ -168,6 +178,7 @@ if __name__ == "__main__":
 
     main(
         jsonl_file="results/predictions.jsonl",
+        backup_file="results/predictions_backup.jsonl",
         endpoint=endpoint,
         model=model,
         token=token,
