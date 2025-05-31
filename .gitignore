@@ -6,6 +6,10 @@ Qwen3-0.6B-Base/
 *.code-workspace
 *:Zone.Identifier
 
+# data
+data/ExploreData.db
+data/*.json
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
