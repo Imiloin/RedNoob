@@ -2,6 +2,7 @@ import json
 import torch
 import random
 import os
+import numpy as np
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import PeftModel
 from text_utils import combine_title_content
@@ -54,11 +55,12 @@ def save_predictions_to_jsonl(
 
 
 def main(
-    json_file: str = "data/f_data.json",
+    json_file: str = "data/note_data.json",
     output_file: str = "results/predictions.jsonl",
     model_name: str = "lora_finetuned",
 ):
     config = load_config()
+    wlaes_cfg = config["wlaes_weights"]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
@@ -105,6 +107,11 @@ def main(
         notes_with_scores = []
 
         for i, note in enumerate(author_data["notes"]):
+            real_score = (
+                wlaes_cfg["like"] * np.log1p(note["like_num"])
+                + wlaes_cfg["collect"] * np.log1p(note["collect_num"])
+                + wlaes_cfg["comment"] * np.log1p(note["comment_num"])
+            )
             predicted_score = predict_popularity(
                 note["title"],
                 note["content"],
@@ -116,6 +123,7 @@ def main(
 
             print(f"Title: {note['title']}")
             print(f"Content: {note['content'][:32]}...")
+            print(f"Real WLAES: {real_score:.4f}")
             print(f"Predicted WLAES: {predicted_score:.4f}")
 
             notes_with_scores.append(
@@ -128,12 +136,13 @@ def main(
                     "collect_num": note["collect_num"],
                     "comment_num": note["comment_num"],
                     "share_num": note["share_num"],
+                    "real_score": real_score,
                     "predicted_score": predicted_score,
                 }
             )
 
         # shuffle the notes to simulate random order
-        random.seed(42)  # set seed for reproducibility
+        random.seed(hash(author_id) % (2**32))  # set seed for reproducibility
         random.shuffle(notes_with_scores)
 
         # sort notes by predicted score in descending order
@@ -152,6 +161,13 @@ def main(
             )
             score_rankings[shuffled_index] = rank
 
+        # calculate real scores and their rankings
+        real_scores = [note["real_score"] for note in notes_with_scores]
+        sorted_real = sorted(enumerate(real_scores), key=lambda x: x[1], reverse=True)
+        real_rank = [0] * 4
+        for rank, (idx, _) in enumerate(sorted_real, 1):
+            real_rank[idx] = rank
+
         # construct the result record for this author as jsonl format
         result_record = {
             "author_id": author_id,
@@ -163,6 +179,8 @@ def main(
             "collect_nums": [note["collect_num"] for note in notes_with_scores],
             "comment_nums": [note["comment_num"] for note in notes_with_scores],
             "share_nums": [note["share_num"] for note in notes_with_scores],
+            "real_scores": real_scores,
+            "real_rank": real_rank,
             "predictions": {
                 model_name: [
                     score_rankings[i] for i in range(4)
@@ -184,7 +202,7 @@ def main(
 
 
 if __name__ == "__main__":
-    json_file = "data/f_data.json"
+    json_file = "data/note_data.json"
     output_file = "results/predictions.jsonl"
     model_name = "lora_finetuned"
     main(json_file=json_file, output_file=output_file, model_name=model_name)
