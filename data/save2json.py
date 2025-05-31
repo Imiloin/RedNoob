@@ -87,8 +87,16 @@ for row in rows:
 
     table[author_id]["notes"].append(note)
 
+# Check each author has 4 notes
+for author_id, author_data in table.items():
+    if len(author_data["notes"]) != 4:
+        print(
+            f"\n------\nWarning: Author {author_id} ({author_data['nickname']}) has {len(author_data['notes'])} notes, skipping...\n------\n"
+        )
+        # del table[author_id]
+
 # Save as JSON
-with open("f_data.json", "w", encoding="utf-8") as f:
+with open("note_data.json", "w", encoding="utf-8") as f:
     json.dump(dict(table), f, ensure_ascii=False, indent=2)
 
 print(f"Done! Data for {len(table)} authors has been processed.")
