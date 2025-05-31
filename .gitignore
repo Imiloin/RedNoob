@@ -10,6 +10,9 @@ Qwen3-0.6B-Base/
 data/ExploreData.db
 data/*.json
 
+# result
+results/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
