@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import time
 import openai
@@ -9,8 +10,6 @@ def get_api_response(
     api_key=None,
     messages=[{"role": "user", "content": "Hello!"}],
     model="openai/gpt-4.1-nano",
-    temperature=0.2,
-    top_p=1.0,
     max_retries=3,
     **kwargs,
 ):
@@ -34,11 +33,11 @@ def get_api_response(
         base_url=endpoint,
         api_key=api_key,
     )
-    
+
     for attempt in range(max_retries):
         try:
             response = client.chat.completions.create(
-                model=model, messages=messages, temperature=temperature, top_p=top_p, **kwargs
+                model=model, messages=messages, **kwargs
             )
             return response.choices[0].message.content
         except openai.RateLimitError as e:
@@ -48,16 +47,17 @@ def get_api_response(
                 error_msg = str(e)
                 if "wait" in error_msg.lower():
                     # Try to extract the wait time from the error message
-                    import re
-                    wait_match = re.search(r'wait (\d+) seconds', error_msg)
+                    wait_match = re.search(r"wait (\d+) seconds", error_msg)
                     if wait_match:
                         wait_time = int(wait_match.group(1)) + 5  # Add 5 seconds buffer
                     else:
                         wait_time = 65  # Default to 65 seconds if can't parse
                 else:
                     wait_time = 65  # Default wait time
-                
-                print(f"Waiting {wait_time} seconds before retry (attempt {attempt + 1}/{max_retries})...")
+
+                print(
+                    f"Waiting {wait_time} seconds before retry (attempt {attempt + 1}/{max_retries})..."
+                )
                 time.sleep(wait_time)
             else:
                 print("Max retries reached for rate limit. Raising error.")
@@ -123,7 +123,8 @@ def main(
     model="openai/gpt-4.1-nano",
     token=None,
     max_retries=3,
-    sleep_time=3, 
+    sleep_time=3,
+    extra_api_params: dict = None,
 ):
     # Copy the original file to a backup if specified
     if backup_file is not None:
@@ -147,6 +148,7 @@ def main(
                     print(
                         f"Skipping author {data['author_id']} ({data['nickname']}) as predictions for model '{model}' already exist."
                     )
+                    result.append(data)
                     continue
                 # Construct messages for the API call
                 messages = construct_messages(
@@ -160,6 +162,7 @@ def main(
                         messages=messages,
                         model=model,
                         api_key=token,
+                        **(extra_api_params or {}),  # add extra parameters
                     )
                     # Parse the response as a list of integers
                     try:
@@ -197,9 +200,15 @@ def main(
 if __name__ == "__main__":
 
     # Set your API endpoint, model, and token here
-    endpoint = "https://api.deepinfra.com/v1/openai"
-    model = "deepseek-ai/DeepSeek-V3-0324"
-    token = os.environ["DEEPINFRA_TOKEN"]  # Ensure you set this environment variable
+    endpoint = "https://api-inference.modelscope.cn/v1/"
+    model = "Qwen/Qwen3-235B-A22B"
+    token = os.environ["MODELSCOPE_SDK_TOKEN"]  # Ensure you set this environment variable
+    extra_api_params = {
+        "temperature": 0.2,
+        "top_p": 0.8,
+        # "reasoning_effort": "low",  # For Gemini model
+        "extra_body": {"enable_thinking": False},  # For Qwen3 model
+    }
 
     main(
         jsonl_file="results/predictions.jsonl",
@@ -209,5 +218,6 @@ if __name__ == "__main__":
         token=token,
         max_retries=3,
         sleep_time=3,
+        extra_api_params=extra_api_params,
     )
     print("API predictions completed.")
