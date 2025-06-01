@@ -1,6 +1,5 @@
 import yaml
 import numpy as np
-import torch
 from datasets import load_dataset
 from transformers import (
     AutoTokenizer,
@@ -128,13 +127,13 @@ def main():
     tokenized_dataset.set_format("torch")
 
     # --- 6. Split dataset (if not already split) ---
-    # Assuming you want to split the "train" from Qilin into train/eval for finetuning
+    # Split the "train" from Qilin into train/eval for finetuning
     if (
         "validation" not in tokenized_dataset.column_names
     ):  # A bit of a hacky check, better to have explicit splits
         print("Splitting dataset into train and validation sets.")
         train_test_split = tokenized_dataset.train_test_split(
-            test_size=0.01, seed=config["training"]["seed"]
+            test_size=config["training"]["val_size"], seed=config["training"]["seed"]
         )
         train_dataset = train_test_split["train"]
         eval_dataset = train_test_split["test"]

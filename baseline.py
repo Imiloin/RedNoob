@@ -1,35 +1,10 @@
-import yaml
 import numpy as np
-from datasets import load_dataset, DatasetDict
+from datasets import load_dataset
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-
-# --- Functions (copied or adapted from train.py for consistency) ---
-
-
-def load_config(config_path="config.yaml"):
-    with open(config_path, "r") as f:
-        return yaml.safe_load(f)
-
-
-def compute_wlaes(examples, w_like, w_collect, w_comment):
-    """Computes the Weighted Logarithmic Accumulated Engagement Score (WLAES)."""
-    # Ensure inputs are arrays and handle potential None or non-numeric gracefully
-    # For baseline, we assume data is clean as it would be for the main model.
-    accum_like = np.array(examples["accum_like_num"], dtype=np.float32)
-    accum_collect = np.array(examples["accum_collect_num"], dtype=np.float32)
-    accum_comment = np.array(examples["accum_comment_num"], dtype=np.float32)
-
-    log_accum_like = np.log1p(accum_like)
-    log_accum_collect = np.log1p(accum_collect)
-    log_accum_comment = np.log1p(accum_comment)
-
-    wlaes = (
-        w_like * log_accum_like
-        + w_collect * log_accum_collect
-        + w_comment * log_accum_comment
-    )
-    examples["wlaes_score"] = wlaes.tolist()  # Use a distinct name for clarity
-    return examples
+from train import (
+    compute_wlaes,
+    load_config,
+)
 
 
 def main():
@@ -69,10 +44,8 @@ def main():
     # This ensures the validation set is identical.
     # The `train_test_split` method from `datasets` is used.
     print("Splitting dataset into train and validation sets for baseline...")
-    # Assuming test_size was 0.1 for eval_dataset in train.py
-    # If you used a different split ratio, adjust test_size here.
     train_test_split = dataset_with_wlaes.train_test_split(
-        test_size=0.01, seed=config["training"]["seed"]
+        test_size=config["training"]["val_size"], seed=config["training"]["seed"]
     )
 
     train_baseline_dataset = train_test_split["train"]
@@ -82,7 +55,7 @@ def main():
     print(f"Baseline evaluation set size: {len(eval_baseline_dataset)}")
 
     # --- 5. "Train" the baseline model (Calculate mean WLAES from training data) ---
-    train_wlaes_scores = np.array(train_baseline_dataset["wlaes_score"])
+    train_wlaes_scores = np.array(train_baseline_dataset["labels"])
     if len(train_wlaes_scores) == 0:
         print("Baseline training set is empty. Cannot compute mean. Exiting.")
         return
@@ -99,7 +72,7 @@ def main():
     # --- 6. "Predict" on the validation set ---
     # For the mean predictor, all predictions are simply the mean_wlaes_train.
     # For the median predictor, all predictions are the median_wlaes_train.
-    actual_wlaes_eval = np.array(eval_baseline_dataset["wlaes_score"])
+    actual_wlaes_eval = np.array(eval_baseline_dataset["labels"])
     if len(actual_wlaes_eval) == 0:
         print("Baseline evaluation set is empty. Cannot evaluate. Exiting.")
         return

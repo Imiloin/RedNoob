@@ -1,6 +1,4 @@
 import os
-import yaml
-import torch
 from datasets import load_dataset
 from transformers import (
     AutoTokenizer,
@@ -17,7 +15,6 @@ from train import (
     load_config,
 )
 
-# text_utils is used within preprocess_data
 
 # disable parallelism for tokenizers to avoid warnings
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -37,8 +34,6 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
 
     # --- 2. Load Dataset (e.g., a test split or the same eval split) ---
-    # For this example, we'll re-load the original dataset and prepare an "eval" part
-    # In a real scenario, you'd have a dedicated test set.
     print(f"Loading dataset from path: {config['dataset_path']} for evaluation")
     raw_dataset_eval = load_dataset(
         config["dataset_path"],
@@ -74,14 +69,10 @@ def main():
         ],
     )
     tokenized_dataset_eval.set_format("torch")
-    # Using a subset for this example, assuming the eval_dataset from training is what we want to re-evaluate
-    # Or, ideally, you have a hold-out test set.
-    # Let's use a split similar to training for demonstration, or ideally, load a 'test' split.
-    # For simplicity, we'll just take a part of it if it's large or use all of it.
-    # Here, we'll use the same train_test_split logic to get a consistent eval set for this example.
+    # Here, we'll use the same train_test_split logic to get a consistent eval set with train.py.
     # In practice, you'd have a separate, unseen test set.
     temp_splits = tokenized_dataset_eval.train_test_split(
-        test_size=0.001, seed=config["training"]["seed"]
+        test_size=config["training"]["val_size"], seed=config["training"]["seed"]
     )
     final_eval_dataset = temp_splits["test"]  # This is just to get a dataset portion
     print(f"Evaluation dataset size: {len(final_eval_dataset)}")

@@ -38,6 +38,7 @@ lora:
 # Training Arguments
 training:
   dataloader_num_workers: 4 # Number of workers for data loading
+  val_size: 0.01 # Proportion of training data to use for validation
   num_train_epochs: 2
   per_device_train_batch_size: 16 # Adjust based on your GPU VRAM
   per_device_eval_batch_size: 16
