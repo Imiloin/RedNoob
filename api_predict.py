@@ -79,16 +79,56 @@ def construct_prompt(
     assert (
         len(note_title) == 4 and len(note_content) == 4
     ), "Both lists must contain exactly 4 items."
-    prompt = "我希望你扮演一位社交媒体分析师。我将提供给你 4 个小红书的笔记，包含笔记的标题和内容。请你根据笔记的标题和内容，对它们的热度进行排序。\n\n"
+    # Task context
+    prompt = "我希望你扮演一位社交媒体分析师。"
+    # Detailed task description and rules
+    prompt += "\n\n我将提供给你 4 个小红书的笔记，包含笔记的标题和内容。请你根据笔记的标题和内容，对它们的热度进行排序。排序结果**用降序表示**，从最热到最冷。"
+    # Examples
+    prompt += "\n\n例如 `2, 1, 4, 3` 代表第二个笔记最热，第四个笔记最冷。"
+    # Input data to process
+    prompt += "\n\n"
     for i, (title, content) in enumerate(zip(note_title, note_content)):
         prompt += f"--- Note {i + 1} ---\n"
-        prompt += f"Title:\n{title}\nContent:\n{content}\n"
+        prompt += f"<title>\n{title}\n</title>\n<content>\n{content}\n</content>\n"
         prompt += f"--- End of Note {i + 1} ---\n\n"
     prompt += "\n"
-    prompt += "请你为这 4 个笔记的热度进行排序，用降序排列，从最热到最冷。请你直接返回一个排序结果，例如 `2, 1, 4, 3` 代表第二个笔记最热，第四个笔记最冷。\n\n"
-    prompt += "请注意，笔记的热度可能受到多个因素的影响，包括但不限于标题的吸引力、内容的质量、话题的流行程度等。请综合考虑这些因素进行排序。\n\n"
-    prompt += "你的回答中只需要包含数字、逗号和空格，不需要其他文字或解释。请直接返回类似 `3, 1, 4, 2` 的排序结果，不要添加任何解释或其他内容。\n\n"
+    # Precognition (thinking step by step)
+    prompt += "\n\n请注意，笔记的热度可能受到多个因素的影响，包括但不限于标题的吸引力、内容的质量、话题的流行程度等。请综合考虑这些因素进行排序。"
+    # Output formatting
+    prompt += "\n\n"
+    prompt += """首先，请你简要分析帖子的内容，将你的想法写在 <analysis> 标签中。然后，按照热度对笔记进行从高到低排序，并将排序结果写在 <ranking> 标签中，排序结果中只能包含数字、逗号和空格，不需要其他文字或解释。
+
+你的回答应当有下面的格式：
+
+```response
+<analysis>
+...在这里写下你的分析...
+</analysis>
+
+<ranking>
+3, 1, 4, 2
+</ranking>
+```
+"""
     return prompt
+
+
+def extract_ranking(response: str):
+    """
+    Extract the ranking from the model's response.
+    Args:
+        response (str): The response from the model.
+    Returns:
+        list[int]: The extracted ranking as a list of integers.
+    """
+    # Use regex to find the ranking in the <ranking> tag
+    match = re.search(r"<ranking>\s*([\d,\s]+)\s*</ranking>", response, re.DOTALL)
+    if match:
+        ranking_str = match.group(1).strip()
+        # Split by comma and convert to integers
+        return [int(x.strip()) for x in ranking_str.split(",")]
+    else:
+        raise ValueError("No valid ranking found in the response.")
 
 
 def construct_messages(
@@ -107,7 +147,7 @@ def construct_messages(
     return [
         {
             "role": "system",
-            "content": "你是一位社交媒体分析师，你的任务是根据笔记的标题和内容，对它们的热度进行排序。",
+            "content": "你是一位社交媒体分析师，专注于用户内容分析。",
         },
         {
             "role": "user",
@@ -166,11 +206,10 @@ def main(
                     )
                     # Parse the response as a list of integers
                     try:
-                        sorted_indices = list(map(int, response.strip().split(",")))
-                        if len(sorted_indices) != 4:
-                            raise ValueError(
-                                f"Expected 4 indices, got {len(sorted_indices)}"
-                            )
+                        sorted_indices = extract_ranking(response)
+                        # Ensure we have exactly 4 indices
+                        if len(set(sorted_indices)) != 4:
+                            raise ValueError("Ranking must contain 4 unique indices.")
                         else:
                             data["predictions"][model] = sorted_indices
                     except ValueError as e:
@@ -186,7 +225,7 @@ def main(
                     break
                 # Save the updated data to the result list
                 print(
-                    f"Author: {data['author_id']} ({data['nickname']}), Response: {response.strip()}"
+                    f"Author: {data['author_id']} ({data['nickname']}), Response: {sorted_indices}"
                 )
                 result.append(data)
                 time.sleep(sleep_time)
@@ -202,9 +241,10 @@ if __name__ == "__main__":
     # Set your API endpoint, model, and token here
     endpoint = "https://api-inference.modelscope.cn/v1/"
     model = "Qwen/Qwen3-235B-A22B"
-    token = os.environ["MODELSCOPE_SDK_TOKEN"]  # Ensure you set this environment variable
+    token = os.environ["MODELSCOPE_SDK_TOKEN"]
+    # Extra parameters for the API call
     extra_api_params = {
-        "temperature": 0.2,
+        "temperature": 0.7,
         "top_p": 0.8,
         # "reasoning_effort": "low",  # For Gemini model
         "extra_body": {"enable_thinking": False},  # For Qwen3 model
