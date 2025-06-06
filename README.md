@@ -17,6 +17,8 @@
     <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+CjxwYXRoIGZpbGw9IiNmZmZmZmYiCiAgICBkPSJNOC43NS43NVYyaC45ODVjLjMwNCAwIC42MDMuMDguODY3LjIzMWwxLjI5LjczNmMuMDM4LjAyMi4wOC4wMzMuMTI0LjAzM2gyLjIzNGEuNzUuNzUgMCAwIDEgMCAxLjVoLS40MjdsMi4xMTEgNC42OTJhLjc1Ljc1IDAgMCAxLS4xNTQuODM4bC0uNTMtLjUzLjUyOS41MzEtLjAwMS4wMDItLjAwMi4wMDItLjAwNi4wMDYtLjAwNi4wMDUtLjAxLjAxLS4wNDUuMDRjLS4yMS4xNzYtLjQ0MS4zMjctLjY4Ni40NUMxNC41NTYgMTAuNzggMTMuODggMTEgMTMgMTFhNC40OTggNC40OTggMCAwIDEtMi4wMjMtLjQ1NCAzLjU0NCAzLjU0NCAwIDAgMS0uNjg2LS40NWwtLjA0NS0uMDQtLjAxNi0uMDE1LS4wMDYtLjAwNi0uMDA0LS4wMDR2LS4wMDFhLjc1Ljc1IDAgMCAxLS4xNTQtLjgzOEwxMi4xNzggNC41aC0uMTYyYy0uMzA1IDAtLjYwNC0uMDc5LS44NjgtLjIzMWwtMS4yOS0uNzM2YS4yNDUuMjQ1IDAgMCAwLS4xMjQtLjAzM0g4Ljc1VjEzaDIuNWEuNzUuNzUgMCAwIDEgMCAxLjVoLTYuNWEuNzUuNzUgMCAwIDEgMC0xLjVoMi41VjMuNWgtLjk4NGEuMjQ1LjI0NSAwIDAgMC0uMTI0LjAzM2wtMS4yODkuNzM3Yy0uMjY1LjE1LS41NjQuMjMtLjg2OS4yM2gtLjE2MmwyLjExMiA0LjY5MmEuNzUuNzUgMCAwIDEtLjE1NC44MzhsLS41My0uNTMuNTI5LjUzMS0uMDAxLjAwMi0uMDAyLjAwMi0uMDA2LjAwNi0uMDE2LjAxNS0uMDQ1LjA0Yy0uMjEuMTc2LS40NDEuMzI3LS42ODYuNDVDNC41NTYgMTAuNzggMy44OCAxMSAzIDExYTQuNDk4IDQuNDk4IDAgMCAxLTIuMDIzLS40NTQgMy41NDQgMy41NDQgMCAwIDEtLjY4Ni0uNDVsLS4wNDUtLjA0LS4wMTYtLjAxNS0uMDA2LS4wMDYtLjAwNC0uMDA0di0uMDAxYS43NS43NSAwIDAgMS0uMTU0LS44MzhMMi4xNzggNC41SDEuNzVhLjc1Ljc1IDAgMCAxIDAtMS41aDIuMjM0YS4yNDkuMjQ5IDAgMCAwIC4xMjUtLjAzM2wxLjI4OC0uNzM3Yy4yNjUtLjE1LjU2NC0uMjMuODY5LS4yM2guOTg0Vi43NWEuNzUuNzUgMCAwIDEgMS41IDBabTIuOTQ1IDguNDc3Yy4yODUuMTM1LjcxOC4yNzMgMS4zMDUuMjczczEuMDItLjEzOCAxLjMwNS0uMjczTDEzIDYuMzI3Wm0tMTAgMGMuMjg1LjEzNS43MTguMjczIDEuMzA1LjI3M3MxLjAyLS4xMzggMS4zMDUtLjI3M0wzIDYuMzI3WiI+CjwvcGF0aD4KPC9zdmc+"></a>
 </div>
 
+<br />
+
 本项目基于 [Qilin](https://huggingface.co/datasets/THUIR/Qilin) 数据集对 [Qwen3-0.6B-Base](https://huggingface.co/Qwen/Qwen3-0.6B-Base) 模型进行 LoRA 微调，通过分析小红书笔记的标题和内容，预测其潜在热度。
 
 Qilin 数据集包含 1.98 M 条小红书笔记的标题、内容、点赞数、收藏数和评论数等信息，训练时滤除了视频笔记，仅使用了其中图文笔记（`note_type == 1`）的部分，约 1.39 M 条数据。
@@ -26,12 +28,12 @@ Qilin 数据集包含 1.98 M 条小红书笔记的标题、内容、点赞数、
 项目的衡量指标为 WLAES（Weighted Logarithmic Accumulated Engagement Score，加权对数累计参与度分数），其公式为
 
 $$
-\text{WLAES} = 1.0 \cdot \log(n_\text{like} + 1) + 0.5 \cdot \log(n_\text{collect} + 1) + 0.2 \cdot \log(n_\text{comment} + 1)
+\text{WLAES} = 1.0 \times \log(n_\text{like} + 1) + 0.5 \times \log(n_\text{collect} + 1) + 0.2 \times \log(n_\text{comment} + 1)
 $$
 
 其中 $n_\text{like}$, $n_\text{collect}$, $n_\text{comment}$ 分别表示笔记的点赞数、收藏数和评论数。
 
-数据集上 WLAES 分数的分布如下图所示：
+数据集上 WLAES 分数的分布如下图所示
 
 <div align="center">
   <img src="README.assets/wlaes_distribution.svg" width="700" alt="WLAES Distribution"/>
@@ -60,7 +62,7 @@ huggingface-cli download THUIR/Qilin --repo-type dataset --local-dir ./Qilin
 huggingface-cli download Qwen/Qwen3-0.6B-Base --local-dir ./Qwen3-0.6B-Base
 ```
 
-在 `config.yaml` 中配置了训练参数，包括学习率、批大小、LoRA 参数等，可自行配置。
+在 `config.yaml` 中配置了训练参数，包括学习率、批大小、LoRA 参数等，可自行按需修改。
 
 使用 `train.sh` 脚本启动训练
 
@@ -74,7 +76,7 @@ bash train.sh
 
 构建均值预测和中位数预测两个简单的 baseline，在验证集中的分数预测表现如下表所示
 
-|      | MAE↓ | RMSE↓ | R2↑ |
+|      | MAE ↓ | RMSE ↓ | R<sup>2</sup> ↑ |
 |:------|-------:|-------:|-----:|
 | Mean Predictor | 5.579 | 6.778 | -0.0001 |
 | Median Predictor | 5.578 | 6.779 | -0.0003 |
@@ -193,7 +195,7 @@ print(f"Predicted WLAES: {predicted_score:.4f}")
 >
 > 为了更好的预测结果，推理时的输入应当符合上述格式要求。
 
-## Acknowledgements
+## Limitation
 
 小红书笔记的热度具有高度的随机性和不确定性，模型预测结果可能会受到话题热度、平台推流、封面质量、内容时效性和争议性等诸多因素的影响，发布笔记用户自身的影响力和粉丝数量也会对热度产生显著影响。模型的预测结果仅供参考，其绝对数值没有实际意义。
 
@@ -212,12 +214,14 @@ content_2 = "白天上班晚上上学 这破日子谁爱过谁过吧 #istj[话�
 > [!WARNING]
 > 使用社交媒体的意义并不在于获取点赞、收藏和评论，而在于分享和交流。模型的预测结果仅供参考，切勿过度依赖。
 
-项目的部分代码使用了 Gemini 2.5 Pro 和 Claude Sonnet 4 生成。
-
-## Limitation
+此外，模型也存在一些局限性：
 
 - **单一模态**：当前模型仅使用文本数据进行预测，未考虑图片、视频等多模态信息，这可能会影响预测的准确性。
 - **数据集偏差**：Qilin 数据集进行了匿名化处理，不包含具有人像的笔记信息，存在潜在的偏差。虽然本模型不需要输入图像，但训练时依然启用了数据集中包含图像的笔记。如果你的笔记包含人像照片，由于缺乏相关训练，预测结果可能很差（毕竟，这个热度只取决于你🫵长得好不好看）。
 - **模型尺寸**：Qwen3-0.6B-Base 仅有 0.6B 参数，可能无法捕捉到复杂的文本特征，导致预测效果有限。对于更复杂的任务，建议使用更大规模的模型。
+
+## Acknowledgements
+
+项目的部分代码使用了 Gemini 2.5 Pro 和 Claude Sonnet 4 生成。
 
 [Qwen3-Embedding](https://qwenlm.github.io/blog/qwen3-embedding/) 系列模型已经发布！微调 Qwen3-Embedding 模型（或许）可以获得更好的效果。
