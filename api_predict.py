@@ -84,12 +84,12 @@ def construct_prompt(
     # Detailed task description and rules
     prompt += "\n\n我将提供给你 4 个小红书的笔记，包含笔记的标题和内容。请你根据笔记的标题和内容，对它们的热度进行排序。排序结果**用降序表示**，从最热到最冷。"
     # Examples
-    prompt += "\n\n例如 `2, 1, 4, 3` 代表第二个笔记最热，第四个笔记最冷。"
+    prompt += "\n\n例如 `2, 1, 4, 3` 代表第二个笔记最热，第三个笔记最冷。"
     # Input data to process
     prompt += "\n\n"
     for i, (title, content) in enumerate(zip(note_title, note_content)):
         prompt += f"--- Note {i + 1} ---\n"
-        prompt += f"<title>\n{title}\n</title>\n<content>\n{content}\n</content>\n"
+        prompt += f"<title>\n  {title}\n</title>\n<content>\n  {content}\n</content>\n"
         prompt += f"--- End of Note {i + 1} ---\n\n"
     prompt += "\n"
     # Precognition (thinking step by step)
@@ -102,11 +102,11 @@ def construct_prompt(
 
 ```response
 <analysis>
-...在这里写下你的分析...
+  ...在这里写下你的分析...
 </analysis>
 
 <ranking>
-3, 1, 4, 2
+  3, 1, 4, 2
 </ranking>
 ```
 """

@@ -1,6 +1,7 @@
 # My staff
 .vscode/
 temp/
+plot/
 Qilin/
 Qwen3-0.6B-Base/
 *.code-workspace
