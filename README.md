@@ -84,6 +84,23 @@ bash train.sh
 | Median Predictor | 5.578 | 6.779 | -0.0003 |
 | LoRA Finetuned Qwen3-0.6B-Base | **4.744** | **5.885** | **0.2461** |
 
+为了进一步测试模型的能力，项目还构造了一个四选一的任务。考虑到笔记的热度与作者的粉丝量和影响力强相关，测试时选取了同一个作者的四条笔记。在这四条笔记中，有一条笔记的热度显著高于其他三条。模型需要从这四条笔记中选出热度最高的那一条。模型通过给每条笔记评分，选出分数最高的笔记。相关代码参见 `model_predict.py`。
+
+同时，项目还使用 API 调用的方式测试一些其他未在数据集上特调的模型，并与 LoRA 微调后的 Qwen3-0.6B-Base 模型进行对比。使用提示词工程的方式，给模型提供了笔记的标题和内容，并要求模型进行热度排序，相关代码参见 `api_predict.py`。
+
+最终结果如下表所示
+
+| Model | Top-1 Accuracy (%) ↑ | Top-2 Accuracy (%) ↑ |
+|:------|---------------------:|---------------------:|
+| GPT-4.1-Nano\* | 20.00 | 56.67 |
+| Qwen3-235B-A22B\* | 23.33 | 53.33 |
+| Gemini-2.5-Flash-Preview-05-20\* | 43.33 | 66.67 |
+| DeepSeek-V3-0324\* | **56.67** | 56.67 |
+| LoRA Finetuned Qwen3-0.6B-Base | 53.33 | **73.33** |
+
+\* *Zero-shot inference using API calls*
+\*\* *Results obtained from testing on 30 sets of data*
+
 ## Inference
 
 您可以从 [HuggingFace](https://huggingface.co/Imilion/Qwen3-0.6B-Base-LoRA-Finetuned-Qilin) 下载训练完成后的 LoRA 模型置于 `qwen3_wlaes_finetuned` 目录下。同时也需要下载 Qwen3-0.6B-Base 模型。应当具有类似下面的目录结构

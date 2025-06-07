@@ -1,0 +1,14 @@
+numpy>=1.26.3, <2.0.0
+pandas
+scikit-learn
+peft==0.15.2
+datasets>=3.5.0, <4.0.0
+transformers==4.51.3
+torch>=2.3.0, <3.0.0
+huggingface_hub[cli]
+
+# For API calls
+# openai
+
+# For the gradio app
+# gradio>=5.29.0, <6.0.0
