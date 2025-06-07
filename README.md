@@ -9,10 +9,10 @@
 <div align="center">
   <a href="https://github.com/Imiloin/RedNoob">
     <img alt="GitHub Repository" src="https://img.shields.io/badge/Code-GitHub-3D8AF5?logo=github"></a>
-  <a href="#">
-    <img alt="HuggingFace Model" src="https://img.shields.io/badge/Model-Coming%20Soon-FFD21E?logo=huggingface"></a>
-  <a href="#">
-    <img alt="ModelScope Demo" src="https://img.shields.io/badge/Demo-Coming%20Soon-624AFF.svg?logo=data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjRkZGRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGhlaWdodD0iMWVtIiBzdHlsZT0iZmxleDpub25lO2xpbmUtaGVpZ2h0OjEiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjFlbSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+TW9kZWxTY29wZTwvdGl0bGU+PHBhdGggZD0iTTIuNjY3IDUuM0g4djIuNjY3SDUuMzMzdjIuNjY2SDIuNjY3VjguNDY3SC41djIuMTY2aDIuMTY3VjEzLjNIMFY3Ljk2N2gyLjY2N1Y1LjN6TTIuNjY3IDEzLjNoMi42NjZ2Mi42NjdIOHYyLjY2NkgyLjY2N1YxMy4zek04IDEwLjYzM2gyLjY2N1YxMy4zSDh2LTIuNjY3ek0xMy4zMzMgMTMuM3YyLjY2N2gtMi42NjZWMTMuM2gyLjY2NnpNMTMuMzMzIDEzLjN2LTIuNjY3SDE2VjEzLjNoLTIuNjY3eiI+PC9wYXRoPjxwYXRoIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTIxLjMzMyAxMy4zdi0yLjY2N2gtMi42NjZWNy45NjdIMTZWNS4zaDUuMzMzdjIuNjY3SDI0VjEzLjNoLTIuNjY3em0wLTIuNjY3SDIzLjVWOC40NjdoLTIuMTY3djIuMTY2eiI+PC9wYXRoPjxwYXRoIGQ9Ik0yMS4zMzMgMTMuM3Y1LjMzM0gxNnYtMi42NjZoMi42NjdWMTMuM2gyLjY2NnoiPjwvcGF0aD48L3N2Zz4="></a>
+  <a href="https://huggingface.co/Imilion/Qwen3-0.6B-Base-LoRA-Finetuned-Qilin">
+    <img alt="HuggingFace Model" src="https://img.shields.io/badge/Model-HuggingFace-FFD21E?logo=huggingface"></a>
+  <a href="https://www.modelscope.cn/studios/Hamiglet/RedNoob/">
+    <img alt="ModelScope Demo" src="https://img.shields.io/badge/Demo-ModelScope-624AFF.svg?logo=data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjRkZGRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGhlaWdodD0iMWVtIiBzdHlsZT0iZmxleDpub25lO2xpbmUtaGVpZ2h0OjEiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjFlbSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+TW9kZWxTY29wZTwvdGl0bGU+PHBhdGggZD0iTTIuNjY3IDUuM0g4djIuNjY3SDUuMzMzdjIuNjY2SDIuNjY3VjguNDY3SC41djIuMTY2aDIuMTY3VjEzLjNIMFY3Ljk2N2gyLjY2N1Y1LjN6TTIuNjY3IDEzLjNoMi42NjZ2Mi42NjdIOHYyLjY2NkgyLjY2N1YxMy4zek04IDEwLjYzM2gyLjY2N1YxMy4zSDh2LTIuNjY3ek0xMy4zMzMgMTMuM3YyLjY2N2gtMi42NjZWMTMuM2gyLjY2NnpNMTMuMzMzIDEzLjN2LTIuNjY3SDE2VjEzLjNoLTIuNjY3eiI+PC9wYXRoPjxwYXRoIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTIxLjMzMyAxMy4zdi0yLjY2N2gtMi42NjZWNy45NjdIMTZWNS4zaDUuMzMzdjIuNjY3SDI0VjEzLjNoLTIuNjY3em0wLTIuNjY3SDIzLjVWOC40NjdoLTIuMTY3djIuMTY2eiI+PC9wYXRoPjxwYXRoIGQ9Ik0yMS4zMzMgMTMuM3Y1LjMzM0gxNnYtMi42NjZoMi42NjdWMTMuM2gyLjY2NnoiPjwvcGF0aD48L3N2Zz4="></a>
   <a href="https://github.com/Imiloin/RedNoob?tab=MIT-1-ov-file#readme">
     <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+CjxwYXRoIGZpbGw9IiNmZmZmZmYiCiAgICBkPSJNOC43NS43NVYyaC45ODVjLjMwNCAwIC42MDMuMDguODY3LjIzMWwxLjI5LjczNmMuMDM4LjAyMi4wOC4wMzMuMTI0LjAzM2gyLjIzNGEuNzUuNzUgMCAwIDEgMCAxLjVoLS40MjdsMi4xMTEgNC42OTJhLjc1Ljc1IDAgMCAxLS4xNTQuODM4bC0uNTMtLjUzLjUyOS41MzEtLjAwMS4wMDItLjAwMi4wMDItLjAwNi4wMDYtLjAwNi4wMDUtLjAxLjAxLS4wNDUuMDRjLS4yMS4xNzYtLjQ0MS4zMjctLjY4Ni40NUMxNC41NTYgMTAuNzggMTMuODggMTEgMTMgMTFhNC40OTggNC40OTggMCAwIDEtMi4wMjMtLjQ1NCAzLjU0NCAzLjU0NCAwIDAgMS0uNjg2LS40NWwtLjA0NS0uMDQtLjAxNi0uMDE1LS4wMDYtLjAwNi0uMDA0LS4wMDR2LS4wMDFhLjc1Ljc1IDAgMCAxLS4xNTQtLjgzOEwxMi4xNzggNC41aC0uMTYyYy0uMzA1IDAtLjYwNC0uMDc5LS44NjgtLjIzMWwtMS4yOS0uNzM2YS4yNDUuMjQ1IDAgMCAwLS4xMjQtLjAzM0g4Ljc1VjEzaDIuNWEuNzUuNzUgMCAwIDEgMCAxLjVoLTYuNWEuNzUuNzUgMCAwIDEgMC0xLjVoMi41VjMuNWgtLjk4NGEuMjQ1LjI0NSAwIDAgMC0uMTI0LjAzM2wtMS4yODkuNzM3Yy0uMjY1LjE1LS41NjQuMjMtLjg2OS4yM2gtLjE2MmwyLjExMiA0LjY5MmEuNzUuNzUgMCAwIDEtLjE1NC44MzhsLS41My0uNTMuNTI5LjUzMS0uMDAxLjAwMi0uMDAyLjAwMi0uMDA2LjAwNi0uMDE2LjAxNS0uMDQ1LjA0Yy0uMjEuMTc2LS40NDEuMzI3LS42ODYuNDVDNC41NTYgMTAuNzggMy44OCAxMSAzIDExYTQuNDk4IDQuNDk4IDAgMCAxLTIuMDIzLS40NTQgMy41NDQgMy41NDQgMCAwIDEtLjY4Ni0uNDVsLS4wNDUtLjA0LS4wMTYtLjAxNS0uMDA2LS4wMDYtLjAwNC0uMDA0di0uMDAxYS43NS43NSAwIDAgMS0uMTU0LS44MzhMMi4xNzggNC41SDEuNzVhLjc1Ljc1IDAgMCAxIDAtMS41aDIuMjM0YS4yNDkuMjQ5IDAgMCAwIC4xMjUtLjAzM2wxLjI4OC0uNzM3Yy4yNjUtLjE1LjU2NC0uMjMuODY5LS4yM2guOTg0Vi43NWEuNzUuNzUgMCAwIDEgMS41IDBabTIuOTQ1IDguNDc3Yy4yODUuMTM1LjcxOC4yNzMgMS4zMDUuMjczczEuMDItLjEzOCAxLjMwNS0uMjczTDEzIDYuMzI3Wm0tMTAgMGMuMjg1LjEzNS43MTguMjczIDEuMzA1LjI3M3MxLjAyLS4xMzggMS4zMDUtLjI3M0wzIDYuMzI3WiI+CjwvcGF0aD4KPC9zdmc+"></a>
 </div>
@@ -22,6 +22,8 @@
 本项目基于 [Qilin](https://huggingface.co/datasets/THUIR/Qilin) 数据集对 [Qwen3-0.6B-Base](https://huggingface.co/Qwen/Qwen3-0.6B-Base) 模型进行 LoRA 微调，通过分析小红书笔记的标题和内容，预测其潜在热度。
 
 Qilin 数据集包含 1.98 M 条小红书笔记的标题、内容、点赞数、收藏数和评论数等信息，训练时滤除了视频笔记，仅使用了其中图文笔记（`note_type == 1`）的部分，约 1.39 M 条数据。
+
+您可以在 ModelScope 社区的 \[**[Online Demo](https://www.modelscope.cn/studios/Hamiglet/RedNoob/)**\] 在线试用模型。
 
 ## Objective
 
@@ -84,7 +86,7 @@ bash train.sh
 
 ## Inference
 
-您可以从 [Coming Soon](#) 下载训练完成后的模型。同时也需要下载 Qwen3-0.6B-Base 模型。应当具有类似下面的目录结构
+您可以从 [HuggingFace](https://huggingface.co/Imilion/Qwen3-0.6B-Base-LoRA-Finetuned-Qilin) 下载训练完成后的 LoRA 模型置于 `qwen3_wlaes_finetuned` 目录下。同时也需要下载 Qwen3-0.6B-Base 模型。应当具有类似下面的目录结构
 
 ```text
 .
