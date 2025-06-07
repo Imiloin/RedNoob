@@ -25,6 +25,13 @@ tokenizer = None
 model = None
 MAX_LENGTH = None
 
+# --- fix transformers issue with Qwen3 models ---
+from transformers import modeling_utils
+
+if not hasattr(modeling_utils, "ALL_PARALLEL_STYLES") or modeling_utils.ALL_PARALLEL_STYLES is None:
+    modeling_utils.ALL_PARALLEL_STYLES = ["tp", "none","colwise",'rowwise']
+# --- end fix ---
+
 
 def load_config_from_yaml(config_path=CONFIG_PATH):
     """Loads configuration from a YAML file."""
